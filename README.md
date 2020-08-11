@@ -1,6 +1,6 @@
 # Github Users app
 
-download apk here:
+download apk here: https://github.com/marlonzabala/GithubUsers/raw/master/GithubUsers.apk
 
 # BONUS
 

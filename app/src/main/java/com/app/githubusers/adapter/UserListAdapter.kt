@@ -96,9 +96,7 @@ class UserListAdapter(private val context: Context) :
     }
 
     private inner class ViewHolderLoading internal constructor(v: View) : RecyclerView.ViewHolder(v) {
-        internal fun bind(position: Int) {
-            // empty loading item
-        }
+        internal fun bind() {}
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -133,7 +131,6 @@ class UserListAdapter(private val context: Context) :
             val padding = 20
             val contextTheme = ContextThemeWrapper(parent.context, R.style.AppTheme)
             val textViewUsername = TextView(contextTheme)
-            //textViewUsername.text = "test"
             textViewUsername.id = usernameID
             textViewUsername.setPadding(padding,0,0,0)
             textViewUsername.apply {
@@ -142,7 +139,6 @@ class UserListAdapter(private val context: Context) :
 
             val textViewDetails = TextView(contextTheme)
             textViewDetails.setPadding(padding,0,0,0)
-            //textViewDetails.text = "details"
             textViewDetails.id = detailsID
 
             linearLayoutDetails.addView(textViewUsername)
@@ -160,7 +156,6 @@ class UserListAdapter(private val context: Context) :
 
             return ViewHolderUser(linearLayoutUser)
         } else {
-            // create views programmatically
             val layoutProgress = LinearLayout(parent.context)
             val layoutParams = RecyclerView.LayoutParams(
                 RecyclerView.LayoutParams.MATCH_PARENT,
@@ -176,7 +171,7 @@ class UserListAdapter(private val context: Context) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (showingLoading && (position + 1 == getItemCount())) {
-            (holder as ViewHolderLoading).bind(position)
+            (holder as ViewHolderLoading).bind()
         } else {
             (holder as ViewHolderUser).bind(position)
         }

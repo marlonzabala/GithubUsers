@@ -92,9 +92,9 @@ class UserDetailsActivityRepository(val application: Application) {
         }
     }
 
-    fun saveNote(note: String) {
+    fun saveNote(noteString: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            val note = userDetails.value?.id?.let { Note(it,note) }
+            val note = userDetails.value?.id?.let { Note(it,noteString) }
             note?.let { userDatabase.notesDao.insertNote(it) }
         }
     }
@@ -103,7 +103,7 @@ class UserDetailsActivityRepository(val application: Application) {
         CoroutineScope(Dispatchers.IO).launch {
             val id = userDatabase.userDao.getUserByLogin(username).id
             val note = userDatabase.notesDao.getNoteById(id)
-            note?.let { updateUserNote(it) }
+            updateUserNote(note)
         }
     }
 

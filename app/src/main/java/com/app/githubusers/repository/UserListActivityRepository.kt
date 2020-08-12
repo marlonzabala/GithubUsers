@@ -63,16 +63,10 @@ class UserListActivityRepository(val application: Application){
                     if(response.toString().contains("limit")) {
                         Toast.makeText(
                             application,
-                            application.getString(R.string.api_limit_reached),
+                            application.getString(R.string.api_limit_reached) + " " +
+                                    application.getString(R.string.show_offline) ,
                             Toast.LENGTH_SHORT
                         ).show()
-
-                        Toast.makeText(
-                            application,
-                            application.getString(R.string.show_offline),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        showUsersOffline()
                     }
                     showProgress.value = false
                 }
@@ -118,8 +112,8 @@ class UserListActivityRepository(val application: Application){
     fun showUsersOffline() {
         CoroutineScope(IO).launch {
             val users = userDatabase.userDao.getAllUsers()
-            val userList = users
-            updateUserList(userList)
+            userListAll = users as MutableList<User>
+            updateUserList(users)
         }
     }
 

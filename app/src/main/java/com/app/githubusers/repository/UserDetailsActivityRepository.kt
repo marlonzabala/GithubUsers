@@ -103,7 +103,9 @@ class UserDetailsActivityRepository(val application: Application) {
         CoroutineScope(Dispatchers.IO).launch {
             val id = userDatabase.userDao.getUserByLogin(username).id
             val note = userDatabase.notesDao.getNoteById(id)
-            updateUserNote(note)
+
+            if(note != null)
+                updateUserNote(note)
         }
     }
 

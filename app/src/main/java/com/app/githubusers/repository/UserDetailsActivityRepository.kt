@@ -53,15 +53,11 @@ class UserDetailsActivityRepository(val application: Application) {
                 if(response.toString().contains("limit")) {
                     Toast.makeText(
                         application,
-                        application.getString(R.string.api_limit_reached),
+                        application.getString(R.string.api_limit_reached) + " " +
+                                application.getString(R.string.show_offline),
                         Toast.LENGTH_SHORT
                     ).show()
 
-                    Toast.makeText(
-                        application,
-                        application.getString(R.string.show_offline),
-                        Toast.LENGTH_SHORT
-                    ).show()
                     getUserOffline(username)
                 }
 
@@ -85,8 +81,6 @@ class UserDetailsActivityRepository(val application: Application) {
 
     fun saveAndShowUser(user:User) {
         CoroutineScope(Dispatchers.IO).launch {
-            //val userOffline = userDatabase.userDao.getUserByLogin(user.login)
-            //user.note = userOffline.note
             userDatabase.userDao.insertOrUpdate(user)
             updateUserInfo(user)
         }

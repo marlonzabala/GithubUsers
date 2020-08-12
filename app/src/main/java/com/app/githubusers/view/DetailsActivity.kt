@@ -18,6 +18,8 @@ import kotlinx.android.synthetic.main.activity_details.*
 
 class DetailsActivity : AppCompatActivity() {
     private lateinit var viewModel : DetailsActivityViewModel
+    private lateinit var networkStateReceiver: BroadcastReceiver
+    private val broadcastFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,13 +61,31 @@ class DetailsActivity : AppCompatActivity() {
         val username = intent.getStringExtra("LOGIN")
         viewModel.getUser(username)
 
-        val networkStateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent?) {
-                viewModel.getUser(username)
+        monitorNetwork()
+        registerReceiver(networkStateReceiver, broadcastFilter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(networkStateReceiver)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        monitorNetwork()
+    }
+
+    private fun monitorNetwork() {
+        if(!::networkStateReceiver.isInitialized) {
+            val username = intent.getStringExtra("LOGIN")
+            networkStateReceiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent?) {
+                    if(viewModel.user.value != null)
+                        viewModel.getUser(username)
+                }
             }
         }
 
-        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        registerReceiver(networkStateReceiver, filter)
+        registerReceiver(networkStateReceiver, broadcastFilter)
     }
 }

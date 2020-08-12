@@ -38,6 +38,9 @@ class UserListActivity : AppCompatActivity() {
     lateinit var buttonEnableSearch: Button
     lateinit var linearLayoutSearch: LinearLayout
 
+    private lateinit var networkStateReceiver: BroadcastReceiver
+    private val broadcastFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         generateViews()
@@ -216,6 +219,7 @@ class UserListActivity : AppCompatActivity() {
 
     override fun onResume() {
         viewModel.loadNotes()
+        monitorNetwork()
         super.onResume()
     }
 
@@ -228,13 +232,19 @@ class UserListActivity : AppCompatActivity() {
     }
 
     private fun monitorNetwork() {
-        val networkStateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent?) {
-                viewModel.loadUsers()
+        if(!::networkStateReceiver.isInitialized) {
+            networkStateReceiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent?) {
+                    viewModel.loadUsers()
+                }
             }
         }
 
-        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        registerReceiver(networkStateReceiver, filter)
+        registerReceiver(networkStateReceiver, broadcastFilter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(networkStateReceiver)
     }
 }

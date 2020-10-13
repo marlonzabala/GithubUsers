@@ -25,6 +25,7 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
         initializeViews()
+        // add this comment
     }
 
     private fun initializeViews() {

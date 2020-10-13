@@ -147,7 +147,7 @@ class UserListActivity : AppCompatActivity() {
         })
 
         viewModel.showProgress.observe(this, Observer {
-            if(it) {
+            if (it) {
                 adapter.showLoading()
             } else {
                 adapter.hideLoading()
@@ -224,7 +224,7 @@ class UserListActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(viewModel.isSearching.value!!) {
+        if (viewModel.isSearching.value!!) {
             viewModel.setIsSearching(false)
         } else {
             finish()
@@ -232,7 +232,7 @@ class UserListActivity : AppCompatActivity() {
     }
 
     private fun monitorNetwork() {
-        if(!::networkStateReceiver.isInitialized) {
+        if (!::networkStateReceiver.isInitialized) {
             networkStateReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent?) {
                     viewModel.loadUsers()
